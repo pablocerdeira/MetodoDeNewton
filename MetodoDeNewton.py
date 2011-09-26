@@ -15,12 +15,13 @@ Implemente o método de Newton para encontrar a raiz de dado número em uma fun�
 '''
 
 # variáveis globais
-Ns = sample(xrange(1000),100)                                                   # Lista com 100 Ns aleatorios ate 1000
+Ns = sample(xrange(100000),1000)                                                # Lista com 100 Ns aleatorios ate 1000
 indice = Decimal(2)                                                             # 2 para raiz quadrada, 3 para cúbica ...
-precs = [2,6,10,100]                                                            # Precisões a serem buscadas
+precs = [2,6,10,100,1000]                                                       # Precisões a serem buscadas
 totIteracoes = []                                                               # Histórico do contador de iterações
 
 def main():
+    i = 0
     for N in Ns: 
         raizes,iteracoes = [],[]
         x0 = randint(1,N-1)
@@ -29,7 +30,8 @@ def main():
             raizes.append(raiz)
             iteracoes.append(iteracs)
             totIteracoes.append(iteracoes)
-        out(N,indice,raizes,precs,x0,iteracoes) 
+        i+=1
+        out(N,indice,raizes,precs,x0,iteracoes,i,len(Ns)) 
     final()
         
 def newton(indice,a,precisao,x0):
@@ -44,10 +46,11 @@ def newton(indice,a,precisao,x0):
     # Retorna as iterações e a raiz.
     return len(resultados), x0
 
-def out(N,indice,raizes,precs,x0,iteracoes):
+def out(N,indice,raizes,precs,x0,iteracoes,i,total):
     print ' '
     print ' '
     print '******************************************************************'
+    print 'Teste:     '+str(i)+'/'+str(total)+' - '+str(float(i)/total*100)+'%'
     print 'N:         %d' % N
     print 'Indice:    %d' % indice
     print 'Inicial:   %d' % x0
