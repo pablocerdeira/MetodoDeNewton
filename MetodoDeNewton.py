@@ -10,32 +10,30 @@ Curso:      Análise Matemática para Aplicações
 Professor:  Antônio Carlos Saraiva Branco 
 Aluno:      Pablo Cerdeira
 Exercício:
-Implemente o metodo de Newton para encontrar a raiz de dado numero em uma funcao
+Implemente o método de Newton para encontrar a raiz de dado número em uma função
 -----------    
 '''
 
 # variáveis globais
 Ns = sample(xrange(1000),100)                                                   # Lista com 100 Ns aleatorios ate 1000
-indice = Decimal(2)
-precs = [2,6,10,100]
-totIteracoes = []
+indice = Decimal(2)                                                             # 2 para raiz quadrada, 3 para cúbica ...
+precs = [2,6,10,100]                                                            # Precisões a serem buscadas
+totIteracoes = []                                                               # Histórico do contador de iterações
 
 def main():
     for N in Ns: 
-        raizes,iteracoes,x0s = [],[],[]
-        for prec in precs: 
-            x0,iteracs,raiz = newton(indice,N,prec)
+        raizes,iteracoes = [],[]
+        x0 = randint(1,N-1)
+        for prec in precs:                                                      # Loop para cada uma das precisões
+            iteracs,raiz = newton(indice,N,prec,x0)                             # chama newton() para o cálculo da raiz
             raizes.append(raiz)
             iteracoes.append(iteracs)
-            x0s.append(x0)
             totIteracoes.append(iteracoes)
-        out(N,indice,raizes,precs,x0s,iteracoes) 
+        out(N,indice,raizes,precs,x0,iteracoes) 
     final()
         
-def newton(indice,a,precisao):
+def newton(indice,a,precisao,x0):
     if a == 1: exit
-    x0 = randint(1,a-1)
-    xOriginal = x0
     resultados = [0,1]
     getcontext().prec = precisao+2
 
@@ -43,20 +41,21 @@ def newton(indice,a,precisao):
         resultados.append(Decimal(1/indice*((indice-1)*x0+(a/x0**(indice-1)))))
         x0 = resultados[-1]
     
-    # Retorna o rand, as iteracoes e a raiz.
-    return xOriginal, len(resultados), x0
+    # Retorna as iterações e a raiz.
+    return len(resultados), x0
 
-def out(N,indice,raizes,precs,x0s,iteracoes):
+def out(N,indice,raizes,precs,x0,iteracoes):
     print ' '
     print ' '
     print '******************************************************************'
     print 'N:         %d' % N
     print 'Indice:    %d' % indice
+    print 'Inicial:   %d' % x0
     i = 0
     for raiz in raizes:                
         print '------------------------------------------------------------------'
         print 'Raiz:      %s' % raiz
-        print 'Precisao:  %d  -  Inicial:  %d  -  Iteracoes:  %d' % (precs[i],x0s[i],iteracoes[i])
+        print 'Precisao:  %d -  Iteracoes:  %d' % (precs[i],iteracoes[i])
         i+=1
     print '------------------------------------------------------------------'
     
@@ -80,7 +79,7 @@ def final():
     ticks = range(1,i+1)
     pylab.boxplot(iteracoes)
     pylab.title('Distribuicao das Iteracoes')
-    pylab.xlabel('Grupo de Iteracoes')
+    pylab.xlabel('Precisao da raiz em casas decimais')
     pylab.ylabel('Quantidade de Iteracoes')
     pylab.xticks(ticks,precs)
     pylab.show()
